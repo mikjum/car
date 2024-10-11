@@ -56,12 +56,12 @@ class carSprite(pygame.sprite.Sprite):
         self.cornerpoints = [self.rect.topright, self.rect.topleft, self.rect.bottomleft, self.rect.bottomright]
         cornerangle = math.atan(self.rect.height/self.rect.width)*180/math.pi
       
-        cornerdistance = math.sqrt((self.rect.width/2)*(self.rect.width/2) + (self.rect.height/2)*(self.rect.height/2))
+        self.cornerdistance = math.sqrt((self.rect.width/2)*(self.rect.width/2) + (self.rect.height/2)*(self.rect.height/2))
         self.cornerangles = [cornerangle, 180-cornerangle, 180+cornerangle, -cornerangle]
         cornerpoints2 = []
         for corner in self.cornerangles:
-            cornerpointx = self.rect.centerx + cornerdistance*math.cos(corner*math.pi/180)
-            cornerpointy = self.rect.centery - cornerdistance*math.sin(corner*math.pi/180)
+            cornerpointx = self.rect.centerx + self.cornerdistance*math.cos(corner*math.pi/180)
+            cornerpointy = self.rect.centery - self.cornerdistance*math.sin(corner*math.pi/180)
             cornerpoints2.append([round(cornerpointx), round(cornerpointy)])
         print (self.cornerpoints)
         print (cornerpoints2)
@@ -148,9 +148,14 @@ class carSprite(pygame.sprite.Sprite):
         # print("Muutokset", muutosX, muutosY, deltaA)   
         # print("residuaali", self._Xres, self._Yres)
         self.rotate_point(deltaA, -40, 0)
-        
-        
-   
+        index = 0
+        cornerpoint = [0,0]
+        for corner in self.cornerangles:
+            ang = corner + self.angle
+            cornerpoint[X] = self.rect.centerx + self.cornerdistance*math.cos(ang*math.pi/180)
+            cornerpoint[Y] = self.rect.centery - self.cornerdistance*math.sin(ang*math.pi/180)
+            self.cornerpoints[index] = cornerpoint
+       # pygame.draw(self.surf, [0, 255, 0], False, self.cornerpoints)
         self.rect.move_ip(-muutosX, muutosY)
         
         
