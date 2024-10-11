@@ -60,7 +60,11 @@ class CarModel():
         else:
             self.speed = newSpeed
         
-        
+    def brake(self, bpower):
+        newSpeed = self.speed - bpower
+        if newSpeed < 0:
+            newSpeed = 0
+        self.speed = newSpeed
         
     def turnWheels(self, turningAngle):
         newAngle = self.wheelAngle + turningAngle
@@ -73,7 +77,7 @@ class CarModel():
         
     def move(self):
      
-        print("Steering angle:", self.wheelAngle)
+   #     print("Steering angle:", self.wheelAngle)
         omega = (self.speed/self.wheelBase)*math.tan(self.wheelAngle*math.pi/180)
         self.rotation += omega
         xDelta = math.cos(self.rotation*math.pi/180)*self.speed*self.timeDelta

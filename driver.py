@@ -23,8 +23,8 @@ from pygame.locals import (
 )
 
 # Define constants for the screen width and height
-SCREEN_WIDTH = 1000
-SCREEN_HEIGHT = 750
+SCREEN_WIDTH = 1500
+SCREEN_HEIGHT = 900
 
 scalefactor = 37
 refreshRate = 100
@@ -59,12 +59,13 @@ while (running):
         kaara.accelerate(10)
     if pressed_keys[K_LEFT]:
         kaara.steer(5)
+       # kaara.rotate_point(5, -40, 0)
     if pressed_keys[K_RIGHT]:
         kaara.steer(-5)
     if pressed_keys[K_DOWN]:
         kaara.accelerate(-10)
-    # if pressed_keys[K_SPACE]:
-    #     kaara.brake()
+    if pressed_keys[K_SPACE]:
+         kaara.brake(20)
     
        
     # if timepassed > 1000 and timepassed < 3000:
