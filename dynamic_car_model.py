@@ -26,7 +26,7 @@ contains methods:
 """
 
 import math
-
+import numpy as np
 
 
 class CarModel():
@@ -40,6 +40,7 @@ class CarModel():
         self.positionX = positionX
         self.positionY = positionY
         self.rotation = initRotation
+        self.axleOffset = -40
         self.speed = 0.0
         self.acceleration = 0.0
         self.wheelAngle = 0.0
@@ -73,13 +74,29 @@ class CarModel():
         else:
             self.wheelAngle = newAngle
     
+    #poerforms rotation around back axis midpoint so that actual car midpoint 
+    # moves accordingly as a side effect.
+    def rotate_midpoint(self, omega):
+        offsetDistance = self.axleOffset
+        offsetAngle = -90
+        offsetPointOriginalLocationX = offsetDistance*math.sin((self.rotation + offsetAngle)*math.pi/180)
+        offsetPointOriginalLocationY = offsetDistance*math.cos((self.rotation+offsetAngle)*math.pi/180)
+        self.rotation += omega
+        offsetPointNewLocationX = offsetDistance*math.sin((self.rotation+offsetAngle)*math.pi/180)
+        offsetPointNewLocationY = offsetDistance*math.cos((self.rotation+offsetAngle)*math.pi/180)
+        movementX = offsetPointNewLocationX-offsetPointOriginalLocationX
+        movementY = offsetPointNewLocationY-offsetPointOriginalLocationY
+        self.positionX += movementX
+        self.positionY += movementY
+        
   
         
     def move(self):
      
    #     print("Steering angle:", self.wheelAngle)
         omega = (self.speed/self.wheelBase)*math.tan(self.wheelAngle*math.pi/180)
-        self.rotation += omega
+        self.rotate_midpoint(omega)
+        #self.rotation += omega
         xDelta = math.cos(self.rotation*math.pi/180)*self.speed*self.timeDelta
         self.positionX += xDelta
         yDelta = math.sin(self.rotation*math.pi/180)*self.speed*self.timeDelta
@@ -89,6 +106,7 @@ class CarModel():
     
     def getPosition(self):
         return self.positionX, self.positionY, self.rotation
+    
     
         
         

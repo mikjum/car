@@ -42,14 +42,17 @@ class carSprite(pygame.sprite.Sprite):
     def __init__(self, posX, posY, angle, L, d, timeD):
         super(carSprite, self).__init__()
         
-        self.car = car.CarModel(L, d, 45, 100, 2, posX, posY, angle-90, timeD)
+        
         self.surf = pygame.image.load("car.png").convert()
         self.surf.set_colorkey((255, 255, 255), RLEACCEL)
+        
         #self.surf = pygame.Surface((d, L))
         #self.surf.fill((255, 255, 255))
         
         self.originalsurf = self.surf
         self.rect = self.surf.get_rect(center = (posX,posY))
+        
+        self.car = car.CarModel(30, self.rect.width, 45, 100, 2, posX, posY, angle-90, timeD)
         
         self.positionX = posX
         self.positionY = posY
@@ -175,7 +178,10 @@ class carSprite(pygame.sprite.Sprite):
         
         # print("Muutokset", muutosX, muutosY, deltaA)   
         # print("residuaali", self._Xres, self._Yres)
-        self.rotate_point(deltaA, -40, 0)
+        
+        #self.rotate_point(deltaA, -40, 0)
+        self.angle += deltaA
+        self.rotate(self.angle)
         
         cornerpoint = []
         self.cornerpoints = []
