@@ -86,8 +86,10 @@ class CarModel():
         offsetPointNewLocationY = offsetDistance*math.cos((self.rotation+offsetAngle)*math.pi/180)
         movementX = offsetPointNewLocationX-offsetPointOriginalLocationX
         movementY = offsetPointNewLocationY-offsetPointOriginalLocationY
-        self.positionX += movementX
-        self.positionY += movementY
+        print ("offsetit: ", movementX, movementY)
+        return movementX, movementY
+        # self.positionX += movementX
+        # self.positionY += movementY
         
   
         
@@ -95,11 +97,11 @@ class CarModel():
      
    #     print("Steering angle:", self.wheelAngle)
         omega = (self.speed/self.wheelBase)*math.tan(self.wheelAngle*math.pi/180)
-        self.rotate_midpoint(omega)
+        movX, movY = self.rotate_midpoint(omega)
         #self.rotation += omega
-        xDelta = math.cos(self.rotation*math.pi/180)*self.speed*self.timeDelta
+        xDelta = movX +  math.cos(self.rotation*math.pi/180)*self.speed*self.timeDelta
         self.positionX += xDelta
-        yDelta = math.sin(self.rotation*math.pi/180)*self.speed*self.timeDelta
+        yDelta = movY +  math.sin(self.rotation*math.pi/180)*self.speed*self.timeDelta
         self.positionY += yDelta
         
         return xDelta, yDelta, omega
