@@ -31,7 +31,7 @@ import numpy as np
 
 class CarModel():
     
-    def __init__(self, wheelBase, gauge, maxWheelAngle, maxSpeed, maxAcceleration, positionX, positionY, initRotation, timeDelta):
+    def __init__(self, length, width, axleoffset, wheelBase, gauge, maxWheelAngle, maxSpeed, maxAcceleration, positionX, positionY, initRotation, timeDelta):
         self.wheelBase = wheelBase
         self.gauge = gauge
         self.maxWheelAngle = maxWheelAngle
@@ -40,11 +40,17 @@ class CarModel():
         self.positionX = positionX
         self.positionY = positionY
         self.rotation = initRotation
-        self.axleOffset = -40
+        self.axleOffset = -20
         self.speed = 0.0
         self.acceleration = 0.0
         self.wheelAngle = 0.0
         self.timeDelta = timeDelta
+        
+        
+        self.length = length
+        self.width = width
+        
+
 
     # def accelerate(self, acceleration):
     #     self.acceleration = acceleration
@@ -60,6 +66,26 @@ class CarModel():
             self.speed = self.maxSpeed
         else:
             self.speed = newSpeed
+            
+    def calculateCorners(self):
+        corners = []
+        cornerDeltaX = self.width/2
+        cornerDeltaY = self.length/2
+        
+        cornerTransfer = [[-cornerDeltaX, -cornerDeltaY], 
+                          [cornerDeltaX, -cornerDeltaY],
+                          [cornerDeltaX, cornerDeltaY],
+                          [-cornerDeltaX, cornerDeltaY]]
+        
+        for cornerT in cornerTransfer:
+            cornerX = self.positionX + cornerT[0]*math.cos(self.rotation*math.pi/180) + cornerT[1]*math.sin(self.rotation*math.pi/180)
+            cornerY = self.positionY - cornerT[0]*math.sin(self.rotation*math.pi/180) + cornerT[1]*math.cos(self.rotation*math.pi/180)
+            corners.append([cornerX, cornerY])
+            
+        self.corners = corners
+        print (corners)
+            
+        
         
     def brake(self, bpower):
         newSpeed = self.speed - bpower
@@ -99,10 +125,11 @@ class CarModel():
         omega = (self.speed/self.wheelBase)*math.tan(self.wheelAngle*math.pi/180)
         movX, movY = self.rotate_midpoint(omega)
         #self.rotation += omega
-        xDelta = movX +  math.cos(self.rotation*math.pi/180)*self.speed*self.timeDelta
+        xDelta = movX -  math.cos(self.rotation*math.pi/180)*self.speed*self.timeDelta
         self.positionX += xDelta
         yDelta = movY +  math.sin(self.rotation*math.pi/180)*self.speed*self.timeDelta
         self.positionY += yDelta
+        self.calculateCorners()
         
         return xDelta, yDelta, omega
     

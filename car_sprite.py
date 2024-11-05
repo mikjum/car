@@ -52,7 +52,7 @@ class carSprite(pygame.sprite.Sprite):
         self.originalsurf = self.surf
         self.rect = self.surf.get_rect(center = (posX,posY))
         
-        self.car = car.CarModel(30, self.rect.width, 45, 100, 2, posX, posY, angle-90, timeD)
+        self.car = car.CarModel(self.rect.height, self.rect.width, -20, 30, 30, 45, 100, 2, posX, posY, angle-90, timeD)
         
         self.positionX = posX
         self.positionY = posY
@@ -152,9 +152,13 @@ class carSprite(pygame.sprite.Sprite):
         muutosY = math.copysign(muutosY, deltaY)
         self._Yres = deltaY-muutosY
         
+        for corner in self.car.corners:
         
-        if self.rect.centerx < 0 or self.rect.centerx > 1500 or self.rect.centery < 0 or self.rect.centery > 900:
-            self.car.speed = 0
+            if corner[0] < 0 or corner[0] > 1500 or corner[1] < 0 or corner[1] > 900:
+                print (corner)
+                self.car.speed = 0
+                pygame.draw.circle(self.surf, [0,255,0], self.rect.center, 5)
+                
         
         # oldPosX = self.rect.centerx
         # oldPosY = self.rect.centery
@@ -195,7 +199,10 @@ class carSprite(pygame.sprite.Sprite):
      #    endPos = (self.cornerpoints[TOPRIGHT][X], self.cornerpoints[TOPRIGHT][Y])
      #    pygame.draw.line(self.surf, [0, 255, 0], startPos, endPos, 3)
      # #   print("Viivan pisteet", startPos, endPos)
-        self.rect.move_ip(-muutosX, muutosY)
+        self.rect.move_ip(muutosX, muutosY)
+        
+        print ("sprite:", self.rect.centerx)
+        print("malli:" , self.car.positionX)
         
         
     

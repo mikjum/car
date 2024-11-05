@@ -66,7 +66,7 @@ while (running):
         kaara.accelerate(-10)
     if pressed_keys[K_SPACE]:
          kaara.brake(20)
-         print(kaara.cornerpoints)
+         
     
        
     # if timepassed > 1000 and timepassed < 3000:
